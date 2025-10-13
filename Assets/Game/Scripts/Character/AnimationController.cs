@@ -50,6 +50,7 @@ public class AnimationController : MonoBehaviour
 public enum EAnimationParameter
 {
     DirectionX,
+    SpeedFactor,
     Attack,
     Jump,
     Hit,

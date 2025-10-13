@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(CircleCollider2D))]
-public class AIController : MonoBehaviour
+public class AIController : MonoBehaviour, IDamageable
 {
     [Header("Attack")]
     [SerializeField] private float damage = 10f;
@@ -84,5 +84,10 @@ public class AIController : MonoBehaviour
 
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(cc.bounds.center, cc.radius * Mathf.Max(transform.lossyScale.x, transform.lossyScale.y));
+    }
+
+    public void ApplyDamage(float amount)
+    {
+        throw new System.NotImplementedException();
     }
 }
