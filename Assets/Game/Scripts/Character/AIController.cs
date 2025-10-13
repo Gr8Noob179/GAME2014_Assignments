@@ -5,8 +5,15 @@ using UnityEngine;
 public class AIController : MonoBehaviour, IDamageable
 {
     [Header("Attack")]
-    [SerializeField] private float damage = 10f;
-    [SerializeField] private float attackCooldown = 0.8f;
+    [SerializeField]
+    private float damage = 10f;
+
+    [SerializeField]
+    private float attackCooldown = 0.8f;
+
+    [Header("Health")]
+    [SerializeField]
+    private Health health;
 
     private CircleCollider2D trigger;
     private AnimationController anim;
@@ -19,6 +26,14 @@ public class AIController : MonoBehaviour, IDamageable
     {
         trigger = GetComponent<CircleCollider2D>();
         anim = AnimationController.Get(gameObject);
+    }
+
+    private void Start()
+    {
+        if (health)
+        {
+            health.OnDeath.AddListener(OnDeath);
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -88,6 +103,16 @@ public class AIController : MonoBehaviour, IDamageable
 
     public void ApplyDamage(float amount)
     {
-        throw new System.NotImplementedException();
+        if (health)
+        {
+            health.ApplyDamage(amount);
+            anim.SetValue(EAnimationParameter.Hit);
+        }
+    }
+
+    private void OnDeath()
+    {
+        anim.SetValue(EAnimationParameter.Death);
+        trigger.enabled = false;
     }
 }

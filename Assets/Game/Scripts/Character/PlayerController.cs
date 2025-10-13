@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[RequireComponent(typeof(Health))]
 public class PlayerController : MonoBehaviour, IDamageable
 {
     [Header("Input")]
@@ -16,16 +17,32 @@ public class PlayerController : MonoBehaviour, IDamageable
     [SerializeField]
     private float deceleration = 40f;
 
+    [Header("Attack")]
+    [SerializeField]
+    private float attackDamage = 10f;
+
+    [SerializeField]
+    private float attackCooldown = 0.5f;
+
+    [SerializeField]
+    private float attackRange = 1.5f;
+
     [Header("Visuals")]
     [SerializeField]
     private SpriteRenderer sprite;
 
     private AnimationController anim;
+    private Health health;
     private Rigidbody2D rb;
+
+    private float lastAttackTime;
+    private bool canAttack = true;
+    private bool hitAnim = false;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        health = GetComponent<Health>();
         anim = AnimationController.Get(gameObject);
     }
 
@@ -53,7 +70,57 @@ public class PlayerController : MonoBehaviour, IDamageable
         }
     }
 
+    public void TryAttack()
+    {
+        if (!canAttack || Time.time - lastAttackTime < attackCooldown)
+        {
+            return;
+        }
+
+        lastAttackTime = Time.time;
+        canAttack = false;
+
+        anim.SetValue(EAnimationParameter.Attack);
+        PerformAttack();
+        Invoke(nameof(ResetAttack), attackCooldown);
+    }
+
+    private void PerformAttack()
+    {
+        Vector2 attackOrigin = transform.position;
+        Collider2D[] hits = Physics2D.OverlapCircleAll(attackOrigin, attackRange);
+
+        foreach (Collider2D hit in hits)
+        {
+            if (hit.gameObject.CompareTag("Player"))
+            {
+                continue;
+            }
+
+            if (hit.TryGetComponent(out IDamageable target))
+            {
+                target.ApplyDamage(attackDamage);
+            }
+        }
+    }
+
+    private void ResetAttack()
+    {
+        canAttack = true;
+    }
+
     public void ApplyDamage(float amount)
     {
+        if (health)
+        {
+            health.ApplyDamage(amount);
+            ToggleHitAnim();
+        }
+    }
+
+    public void ToggleHitAnim()
+    {
+        anim.SetValue(EAnimationParameter.Hit, !hitAnim);
+        hitAnim = !hitAnim;
     }
 }

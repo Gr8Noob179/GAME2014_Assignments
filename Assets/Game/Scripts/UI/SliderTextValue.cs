@@ -8,6 +8,8 @@ public class SliderTextValue : MonoBehaviour
     [SerializeField] private Slider slider;
     [SerializeField] private TMP_Text text;
 
+    public float Value { get => slider.value; set => slider.value = value; }
+
     private void Start()
     {
         if (slider)
@@ -16,7 +18,12 @@ public class SliderTextValue : MonoBehaviour
         }
     }
 
-    private void UpdateText(float value)
+    public void UpdateMaxValue(float value)
+    {
+        slider.maxValue = value;
+    }
+
+    public void UpdateText(float value)
     {
         if (text)
         {
