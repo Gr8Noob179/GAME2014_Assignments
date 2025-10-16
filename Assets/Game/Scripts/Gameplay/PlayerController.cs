@@ -17,6 +17,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private Rect movementBounds = new Rect(-5f, -3f, 10f, 6f);
 
+    [SerializeField]
+    private LayerMask mask;
+
     private Rigidbody2D rb;
     private Vector2 desiredPos;
     private float elapsedTime;
@@ -52,8 +55,8 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.up);
-        if (hit && !hit.collider.GetComponent<Projectile>() && !hit.collider.gameObject != this)
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.up, 1000, mask);
+        if (hit && !hit.collider.GetComponent<Projectile>())
         {
             bHasShot = true;
             elapsedTime = 0;

@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1132308359101202242}
   - component: {fileID: 5112265200731570754}
   - component: {fileID: 7677714026736657395}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -232,7 +232,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6745359575415543600}
   - component: {fileID: 3540243870518346886}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: ExplosionRenderer
   m_TagString: Untagged
   m_Icon: {fileID: 0}

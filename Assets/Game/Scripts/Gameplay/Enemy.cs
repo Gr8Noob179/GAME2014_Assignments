@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.UIElements;
 
 [RequireComponent(typeof(Health))]
@@ -41,19 +42,24 @@ public class Enemy : MonoBehaviour
     public Spawner spawner;
 
     private Health health;
+    private ScoreText score;
     private float elapsedTime;
     private int animationFrame = 0;
     private bool bHasShot = false;
 
     private void Awake()
     {
+        score = FindFirstObjectByType<ScoreText>();
+
         health = GetComponent<Health>();
         health.OnDeath.AddListener(() =>
         {
             StartCoroutine(StartExplosionAnimation());
             Destroy(gameObject, animationSpeed * explosionFrames.Count);
+            score.UpdateScore();
             AudioManager.Instance.PlaySFX("Death");
         });
+
     }
 
     private void Update()

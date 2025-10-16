@@ -72,6 +72,7 @@ public class Health : MonoBehaviour
     private void Die()
     {
         OnDeath?.Invoke();
+        AudioManager.Instance.PlaySFX("Explosion");
 
         if (destroyOnDeath)
         {

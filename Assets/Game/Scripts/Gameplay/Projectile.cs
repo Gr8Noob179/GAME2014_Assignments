@@ -32,6 +32,8 @@ public class Projectile : MonoBehaviour
             {
                 target.ApplyDamage(damage);
             }
+
+            AudioManager.Instance.PlaySFX("Hit");
         }
     }
 }
