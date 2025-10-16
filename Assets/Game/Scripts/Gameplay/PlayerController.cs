@@ -20,17 +20,12 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D rb;
     private Vector2 desiredPos;
     private float elapsedTime;
-    bool bHasTarget = false;
-    bool bHasShot = false;
+    private bool bHasTarget = false;
+    private bool bHasShot = false;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-    }
-
-    public void PerformShoot()
-    {
-
     }
 
     public void SetDesiredPosition(InputAction.CallbackContext context)
@@ -57,7 +52,8 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        if (Physics2D.Raycast(transform.position, transform.up))
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.up);
+        if (hit && !hit.collider.GetComponent<Projectile>() && !hit.collider.gameObject != this)
         {
             bHasShot = true;
             elapsedTime = 0;
@@ -65,6 +61,9 @@ public class PlayerController : MonoBehaviour
             Projectile bullet = Instantiate(bulletPrefab, gameObject.transform.position, Quaternion.identity);
             bullet.directionSign = Mathf.Sign(gameObject.transform.up.y);
             bullet.exceptions.Add(gameObject);
+            bullet.gameObject.SetActive(true);
+
+            AudioManager.Instance.PlaySFX("Shoot");
             Destroy(bullet, 5f);
         }
     }

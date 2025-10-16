@@ -24,11 +24,14 @@ public class Projectile : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (!exceptions.Contains(collision.gameObject) && collision.TryGetComponent(out Health target))
+        if (!exceptions.Contains(collision.gameObject))
         {
-            target.ApplyDamage(damage);
-        }
+            gameObject.SetActive(false);
 
-        gameObject.SetActive(false);
+            if (collision.TryGetComponent(out Health target))
+            {
+                target.ApplyDamage(damage);
+            }
+        }
     }
 }
